@@ -22,8 +22,10 @@
     </select>
 
     <insert id="insertUpload" parameterType="UploadVO">
+        <selectKey keyColumn="BOARD_UPLOAD_SEQ" keyProperty="boardUploadSeq" resultType="Long" order="BEFORE">
         INSERT INTO BOARD_UPLOAD VALUES(BOARD_UPLOAD_SEQ.NEXTVAL,#{boardSeq},#{boardUploadName},#{boardUploadOriginName}
         ,#{boardUploadUrl})
+        </selectKey>
     </insert>
 
 </mapper>

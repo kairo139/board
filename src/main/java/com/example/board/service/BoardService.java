@@ -46,7 +46,7 @@ public class BoardService {
             file.transferTo(destinationFile);
 
             UploadVO uploadVO = new UploadVO();
-            uploadVO.setProductSeq();
+            /*uploadVO.setProductSeq();*/
             uploadVO.setBoardUploadName(destinationFileName);
             uploadVO.setBoardUploadOriginName(fileName);
             uploadVO.setBoardUploadUrl(fileUrl);
