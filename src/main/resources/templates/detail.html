@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div{
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        제목
+        <div>
+            <span th:text="${details.getBoardTitle()}"></span>
+        </div>
+        파일 첨부
+        <div>
+            <a href=""></a>
+        </div>
+        내용
+        <div>
+            <span th:text="${details.getBoardContent()}"></span>
+        </div>
+    </div>
+    <div>
+        댓글
+        <table>
+            <tbody>
+                <tr>
+                    <td></td>   <!--내용-->
+                    <td></td>   <!--작성자-->
+                    <td></td>   <!--작성시간-->
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <input type="text" name="boardCommentContent"><button>작성</button>
+        </div>
+    </div>
+</body>
+</html>

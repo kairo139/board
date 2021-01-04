@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.board.mapper.BoardMapper">
+    <select id="findPost" resultType="BoardVO">
+        SELECT B.BOARD_SEQ, B.BOARD_TITLE, B.BOARD_VIEWS, TO_CHAR(B.BOARD_REGDT,'mm-dd') as BOARD_REGDT
+        , M.MEMBER_ID FROM BOARD B
+        INNER JOIN MEMBER M ON B.MEMBER_SEQ = M.MEMBER_SEQ
+    </select>
+
+    <insert id="insertPost" parameterType="BoardVO">
+        INSERT INTO BOARD(BOARD_SEQ, MEMBER_SEQ, BOARD_TITLE, BOARD_CONTENT)
+        VALUES(BOARD_SEQ.NEXTVAL,1,#{boardTitle},#{boardContent})
+    </insert>
+
+    <select id="findPostDetail" resultType="BoardVO">
+        SELECT B.BOARD_TITLE, B.BOARD_VIEWS, TO_CHAR(B.BOARD_REGDT,'yy-mm-dd') as BOARD_REGDT, B.BOARD_CONTENT,
+         M.MEMBER_ID FROM BOARD B
+        INNER JOIN MEMBER M ON B.MEMBER_SEQ = M.MEMBER_SEQ
+        WHERE B.BOARD_SEQ = #{seq}
+    </select>
+
+    <insert id="insertUpload" parameterType="UploadVO">
+        INSERT INTO BOARD_UPLOAD VALUES(BOARD_UPLOAD_SEQ.NEXTVAL,#{boardSeq},#{boardUploadName},#{boardUploadOriginName}
+        ,#{boardUploadUrl})
+    </insert>
+
+</mapper>

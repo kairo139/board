@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div{
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form id="insertPost" action="/insert" method="post" enctype="multipart/form-data">
+        제목
+        <div>
+            <input type="text" name="boardTitle">
+        </div>
+        파일 첨부
+        <div>
+            <input type="file" name="file">
+        </div>
+        내용
+        <div>
+            <textarea cols="50" rows="10" name="boardContent"></textarea>
+        </div>
+        <div>
+            <button>저장</button>
+        </div>
+    </form>
+</body>
+</html>
