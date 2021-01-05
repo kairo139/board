@@ -9,11 +9,6 @@
         INNER JOIN MEMBER M ON B.MEMBER_SEQ = M.MEMBER_SEQ
     </select>
 
-    <insert id="insertPost" parameterType="BoardVO">
-        INSERT INTO BOARD(BOARD_SEQ, MEMBER_SEQ, BOARD_TITLE, BOARD_CONTENT)
-        VALUES(BOARD_SEQ.NEXTVAL,1,#{boardTitle},#{boardContent})
-    </insert>
-
     <select id="findPostDetail" resultType="BoardVO">
         SELECT B.BOARD_TITLE, B.BOARD_VIEWS, TO_CHAR(B.BOARD_REGDT,'yy-mm-dd') as BOARD_REGDT, B.BOARD_CONTENT,
          M.MEMBER_ID FROM BOARD B
@@ -21,11 +16,28 @@
         WHERE B.BOARD_SEQ = #{seq}
     </select>
 
+    <select id="findPostUpload" resultType="FileVO">
+        SELECT * FROM BOARD_UPLOAD WHERE BOARD_SEQ = #{boardSeq}
+    </select>
+
+    <select id="findPostComment" resultType="CommentVO">
+        SELECT BOARD_COMMENT_SEQ, BOARD_COMMENT_PARENT, MEMBER_SEQ, BOARD_COMMENT_CONTENT,
+        TO_CHAR(BOARD_COMMENT_REGDT,'mm-dd') AS BOARD_COMMENT_REGDT FROM BOARD_COMMENT WHERE BOARD_SEQ = #{boardSeq}
+        START WITH BOARD_COMMENT_PARENT IS NULL CONNECT BY PRIOR BOARD_COMMENT_SEQ = BOARD_COMMENT_PARENT
+    </select>
+
+    <insert id="insertPost" parameterType="BoardVO">
+        <selectKey keyColumn="BOARD_SEQ" keyProperty="boardSeq" resultType="int" order="BEFORE">
+            SELECT BOARD_SEQ.NEXTVAL as BOARD_SEQ FROM BOARD
+        </selectKey>
+        INSERT INTO BOARD(BOARD_SEQ, MEMBER_SEQ, BOARD_TITLE, BOARD_CONTENT)
+        VALUES(#{boardSeq},1,#{boardTitle},#{boardContent})
+    </insert>
+
     <insert id="insertUpload" parameterType="UploadVO">
-        <selectKey keyColumn="BOARD_UPLOAD_SEQ" keyProperty="boardUploadSeq" resultType="Long" order="BEFORE">
         INSERT INTO BOARD_UPLOAD VALUES(BOARD_UPLOAD_SEQ.NEXTVAL,#{boardSeq},#{boardUploadName},#{boardUploadOriginName}
         ,#{boardUploadUrl})
-        </selectKey>
     </insert>
+
 
 </mapper>

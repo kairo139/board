@@ -7,9 +7,9 @@ import java.util.Date;
 
 @Getter @Setter
 public class BoardVO {
-    private Long boardSeq;
+    private int boardSeq;
 
-    private Long memberSeq;
+    private int memberSeq;
 
     private String memberId;
 
@@ -17,7 +17,7 @@ public class BoardVO {
 
     private String boardContent;
 
-    private Long boardViews;
+    private int boardViews;
 
     private String boardREGDT;
 

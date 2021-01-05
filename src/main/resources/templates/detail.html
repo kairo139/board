@@ -7,37 +7,103 @@
         div{
             padding-bottom: 10px;
         }
+
+        .commendBtn{
+            float: right;
+            border: none;
+            background-color: white;
+            font-size: 5px;
+            cursor: pointer;
+        }
+
+        .commendTable tbody tr{
+            border-bottom: 1px solid gray;
+        }
     </style>
 </head>
 <body>
     <div>
-        제목
         <div>
-            <span th:text="${details.getBoardTitle()}"></span>
+            <h3>제목</h3>
+            <div>
+                <span th:text="${details.getBoardTitle()}"></span>
+            </div>
         </div>
-        파일 첨부
         <div>
-            <a href=""></a>
+            <b>내용</b>
+            <div>
+                <span th:text="${details.getBoardContent()}"></span>
+            </div>
         </div>
-        내용
         <div>
-            <span th:text="${details.getBoardContent()}"></span>
+            <b>파일 첨부</b>
+            <div th:if="${upload != null}">
+                <a th:href="'/download/' + ${upload.getBoardSeq()}"
+                   th:text="${upload.getBoardUploadOriginName()}"></a>
+            </div>
+
         </div>
     </div>
     <div>
-        댓글
+        <b>댓글</b>
         <table>
-            <tbody>
-                <tr>
-                    <td></td>   <!--내용-->
-                    <td></td>   <!--작성자-->
-                    <td></td>   <!--작성시간-->
+            <tbody th:if="${!comments.isEmpty()}">
+                <tr th:each="comment : ${comments}">
+                    <td th:if="${comment.getBoardCommentParent() != 0}">
+                        <table class="commendTable">
+                            <tbody>
+                                <tr>
+                                    <td>└</td>
+                                    <td th:text="${comment.getMemberSeq()}"></td>
+                                    <td th:text="${comment.getBoardCommentContent()}"></td>
+                                    <td th:text="${comment.getBoardCommentREGDT()}"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"><button class="commendBtn">답글</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td th:if="${comment.getBoardCommentParent() == 0}">
+                        <table class="commendTable">
+                            <tbody>
+                                <tr>
+                                    <td th:text="${comment.getMemberSeq()}"
+                                        th:id="${comment.getBoardCommentSeq()}"></td>
+                                    <td th:text="${comment.getBoardCommentContent()}"></td>
+                                    <td th:text="${comment.getBoardCommentREGDT()}"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"><button class="commendBtn">답글</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                 </tr>
             </tbody>
         </table>
         <div>
-            <input type="text" name="boardCommentContent"><button>작성</button>
+            <textarea cols="50" rows="5" name="boardCommentContent"></textarea>
+            <button>작성</button>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        var btn = $('.commendBtn');
+
+        btn.on('click',function(){
+            var $test = $(this);
+            var seq1 = $test.parent();
+            var seq2 = $test.parent().parent();
+            console.log(seq1);
+            console.log(seq2);
+            $test.parent().parent().after("<tr><td colspan='3'><input type='text' id='commentInput'>" +
+                "<button onclick='saveReComment()'>답글달기</button></td></tr>");
+        });
+
+        function saveReComment(){
+
+        }
+    </script>
 </body>
 </html>

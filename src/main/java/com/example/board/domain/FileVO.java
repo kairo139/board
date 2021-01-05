@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class UploadVO {
-
+public class FileVO {
     private int boardUploadSeq;
 
     private int boardSeq;
@@ -16,3 +15,4 @@ public class UploadVO {
 
     private String boardUploadUrl;
 }
+

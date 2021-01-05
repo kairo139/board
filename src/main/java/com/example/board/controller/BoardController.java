@@ -1,16 +1,21 @@
 package com.example.board.controller;
 
 import com.example.board.domain.BoardVO;
+import com.example.board.domain.FileVO;
 import com.example.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 @Controller
 public class BoardController {
@@ -34,15 +39,23 @@ public class BoardController {
     @RequestMapping("/insert")
     public String write(@ModelAttribute BoardVO boardVO, @RequestPart MultipartFile file) throws IOException {
         boardService.insertPost(boardVO);
-        boardService.fileUpload(file);
+        boardService.fileUpload(file,boardVO);
 
         return "redirect:/board";
     }
 
     @RequestMapping("/detail")
-    public String detail(Long seq, Model model){
+    public String detail(int seq, Model model){
         model.addAttribute("details",boardService.findPostDetail(seq));
+        model.addAttribute("upload",boardService.findPostUpload(seq));
+        model.addAttribute("comments",boardService.findPostComment(seq));
 
         return "detail";
+    }
+
+    @RequestMapping("/download/{seq}")
+    private void download(@PathVariable("seq") int seq, HttpServletRequest request, HttpServletResponse response)
+            throws UnsupportedEncodingException, Exception{
+        boardService.download(seq, request, response);
     }
 }
