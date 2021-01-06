@@ -22,4 +22,5 @@ public class BoardVO {
     private String boardREGDT;
 
     private Date boardMODDT;
+
 }

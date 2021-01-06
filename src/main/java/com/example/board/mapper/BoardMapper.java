@@ -24,4 +24,6 @@ public interface BoardMapper {
     public FileVO findPostUpload(int boardSeq);
 
     public List<CommentVO> findPostComment(int boardSeq);
+
+    public void insertReCommend(CommentVO commentVO);
 }

@@ -19,6 +19,15 @@
         .commendTable tbody tr{
             border-bottom: 1px solid gray;
         }
+
+        .closeBtn{
+            float: right;
+            border: none;
+            background-color: white;
+            font-size: 5px;
+            cursor: pointer;
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -27,6 +36,7 @@
             <h3>제목</h3>
             <div>
                 <span th:text="${details.getBoardTitle()}"></span>
+                <span th:text="${details.getBoardSeq()}" style="display: none" id="boardSeq"></span>
             </div>
         </div>
         <div>
@@ -53,13 +63,13 @@
                         <table class="commendTable">
                             <tbody>
                                 <tr>
-                                    <td>└</td>
+                                    <td th:id="${comment.getBoardCommentSeq()}">└</td>
                                     <td th:text="${comment.getMemberSeq()}"></td>
                                     <td th:text="${comment.getBoardCommentContent()}"></td>
                                     <td th:text="${comment.getBoardCommentREGDT()}"></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="4"><button class="commendBtn">답글</button></td>
+                                    <td colspan="4"><button class="commendBtn" onclick="commend(this)">답글</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -74,7 +84,7 @@
                                     <td th:text="${comment.getBoardCommentREGDT()}"></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="3"><button class="commendBtn">답글</button></td>
+                                    <td colspan="3"><button class="commendBtn" onclick="commend(this)">답글</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -83,26 +93,71 @@
             </tbody>
         </table>
         <div>
-            <textarea cols="50" rows="5" name="boardCommentContent"></textarea>
-            <button>작성</button>
+            <textarea cols="50" rows="5" id="boardCommentContent"></textarea>
+            <button onclick="saveComment()">작성</button>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script>
-        var btn = $('.commendBtn');
+<!--    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
+    <script src="../static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
 
-        btn.on('click',function(){
-            var $test = $(this);
-            var seq1 = $test.parent();
-            var seq2 = $test.parent().parent();
-            console.log(seq1);
-            console.log(seq2);
+        function commend(btn){
+            var $test = $(btn);
+
+            btn.innerText = "닫기";
+            btn.classList.remove('commendBtn');
+            btn.classList.add('closeBtn');
+            btn.setAttribute("onClick","closeBtn(this)");
+
+            var seq = $test.parent().parent().parent().find('td')[0].id;
+
             $test.parent().parent().after("<tr><td colspan='3'><input type='text' id='commentInput'>" +
-                "<button onclick='saveReComment()'>답글달기</button></td></tr>");
-        });
+                "<button onclick='saveReComment(this," + seq + ")'>답글달기</button></td></tr>");
+        }
 
-        function saveReComment(){
+        function closeBtn(btn){
+            var $test = $(btn);
+            $test.parent().parent().parent().find('tr')[2].remove();
 
+            btn.innerText = "답글";
+            btn.classList.remove('closeBtn');
+            btn.classList.add('commendBtn');
+            btn.setAttribute("onClick","commend(this)");
+        }
+
+        function saveReComment(btn,seq){
+            var comment = document.getElementById("commentInput").value;
+
+            var data = {
+                boardCommentParent : seq,
+                boardSeq : document.getElementById("boardSeq").innerText,
+                memberSeq : 1,
+                boardCommentContent : comment
+            }
+
+            commentAjax(data);
+        }
+
+        function saveComment(){
+            var data = {
+                boardSeq : document.getElementById("boardSeq").innerText,
+                memberSeq : 1,
+                boardCommentContent : document.getElementById("boardCommentContent").value
+            }
+
+            commentAjax(data);
+        }
+
+        function commentAjax(data){
+            $.ajax({
+                url : "/insertComment",
+                type : "POST",
+                contentType : "application/json",
+                data : JSON.stringify(data),
+                success : function(){
+                    location.reload();
+                }
+            })
         }
     </script>
 </body>

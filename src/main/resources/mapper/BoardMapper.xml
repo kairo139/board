@@ -10,8 +10,8 @@
     </select>
 
     <select id="findPostDetail" resultType="BoardVO">
-        SELECT B.BOARD_TITLE, B.BOARD_VIEWS, TO_CHAR(B.BOARD_REGDT,'yy-mm-dd') as BOARD_REGDT, B.BOARD_CONTENT,
-         M.MEMBER_ID FROM BOARD B
+        SELECT B.BOARD_SEQ, B.BOARD_TITLE, B.BOARD_VIEWS, TO_CHAR(B.BOARD_REGDT,'yy-mm-dd') as BOARD_REGDT,
+         B.BOARD_CONTENT, M.MEMBER_ID FROM BOARD B
         INNER JOIN MEMBER M ON B.MEMBER_SEQ = M.MEMBER_SEQ
         WHERE B.BOARD_SEQ = #{seq}
     </select>
@@ -28,7 +28,7 @@
 
     <insert id="insertPost" parameterType="BoardVO">
         <selectKey keyColumn="BOARD_SEQ" keyProperty="boardSeq" resultType="int" order="BEFORE">
-            SELECT BOARD_SEQ.NEXTVAL as BOARD_SEQ FROM BOARD
+            SELECT BOARD_SEQ_AI.NEXTVAL as BOARD_SEQ FROM BOARD
         </selectKey>
         INSERT INTO BOARD(BOARD_SEQ, MEMBER_SEQ, BOARD_TITLE, BOARD_CONTENT)
         VALUES(#{boardSeq},1,#{boardTitle},#{boardContent})
@@ -39,5 +39,11 @@
         ,#{boardUploadUrl})
     </insert>
 
-
+    <insert id="insertReCommend" parameterType="CommentVO">
+        INSERT INTO BOARD_COMMENT(BOARD_COMMENT_SEQ, <if test="boardCommentParent != 0">BOARD_COMMENT_PARENT,</if>
+         BOARD_SEQ, MEMBER_SEQ,BOARD_COMMENT_CONTENT, BOARD_COMMENT_REGDT, BOARD_COMMENT_LV)
+        VALUES(BOARD_COMMENT_SEQ.NEXTVAL, <if test="boardCommentParent != 0"> #{boardCommentParent},</if>
+         #{boardSeq}, #{memberSeq}, #{boardCommentContent}, SYSDATE,
+         (SELECT BOARD_COMMENT_LV + 1 FROM BOARD_COMMENT WHERE BOARD_COMMENT_SEQ = #{boardCommentParent}))
+    </insert>
 </mapper>

@@ -136,4 +136,6 @@ public class BoardService {
     public FileVO findPostUpload(int boardSeq){ return boardMapper.findPostUpload(boardSeq); }
 
     public List<CommentVO> findPostComment(int boardSeq){ return boardMapper.findPostComment(boardSeq); }
+
+    public void insertReCommend(CommentVO commentVO){ boardMapper.insertReCommend(commentVO); }
 }
