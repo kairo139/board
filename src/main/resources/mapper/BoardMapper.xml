@@ -28,7 +28,7 @@
 
     <insert id="insertPost" parameterType="BoardVO">
         <selectKey keyColumn="BOARD_SEQ" keyProperty="boardSeq" resultType="int" order="BEFORE">
-            SELECT BOARD_SEQ_AI.NEXTVAL as BOARD_SEQ FROM BOARD
+            SELECT BOARD_SEQ_AI.NEXTVAL as BOARD_SEQ FROM DUAL
         </selectKey>
         INSERT INTO BOARD(BOARD_SEQ, MEMBER_SEQ, BOARD_TITLE, BOARD_CONTENT)
         VALUES(#{boardSeq},1,#{boardTitle},#{boardContent})
